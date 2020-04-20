@@ -105,84 +105,24 @@ public class PoJoUtil {
 
 
     /**
-     * @param name  图表题
-     * @param lines 线名称
-     * @param list  线数据
+     * @param xValue 横轴做表明
+     * @param yValue  数据值
      * @return
      */
-    public static HashMap getEcharMap(String name, List<String> lines, List<HashMap> list) {
+    public static HashMap getEcharMap(List xValue, List yValue) {
         //主Map
         HashMap root = new HashMap();
-        HashMap title = new HashMap(1), tooltip = new HashMap(1), legend = new HashMap(1), grid = new HashMap(),
-                xAxis = new HashMap(), yAxis = new HashMap();
-        title.put("text", name);
-        root.put("title", title);
-        tooltip.put("trigger", "axis");
-        //设置横坐标
-        Date now = new Date();
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(now);
+        HashMap xAxis = new HashMap();
         xAxis.put("type", "category");
-        xAxis.put("boundaryGap", false);
-        String[] row = new String[7];
-        row[6] = DataFormat.formatDate(calendar.getTime(), DataFormat.FMT_YYYY_MM_DD);
-        for (int i = 5; i >= 0; i--) {
-            calendar.add(Calendar.DATE, -1);
-            row[i] = DataFormat.formatDate(calendar.getTime(), DataFormat.FMT_YYYY_MM_DD);
-        }
-        xAxis.put("date", row);
+        xAxis.put("data", xValue.toArray());
         root.put("xAxis", xAxis);
-        //设置线名称
-        legend.put("data", lines.toArray());
-        root.put("legend", legend);
-        grid.put("left", "3%");
-        grid.put("right", "4%");
-        grid.put("bottom", "3%");
-        grid.put("containLabel", true);
-        root.put("grid", grid);
-        //设置纵轴
+        HashMap yAxis = new HashMap();
         yAxis.put("type", "value");
         root.put("yAxis", yAxis);
-        //设置数据
-        root.put("series", list.toArray());
-        /**
-         *     yAxis: {
-         *         type: 'value'
-         *     },
-         *     series: [
-         *         {
-         *             name: '邮件营销',
-         *             type: 'line',
-         *             stack: '总量',
-         *             data: [120, 132, 101, 134, 90, 230, 210]
-         *         },
-         *         {
-         *             name: '联盟广告',
-         *             type: 'line',
-         *             stack: '总量',
-         *             data: [220, 182, 191, 234, 290, 330, 310]
-         *         },
-         *         {
-         *             name: '视频广告',
-         *             type: 'line',
-         *             stack: '总量',
-         *             data: [150, 232, 201, 154, 190, 330, 410]
-         *         },
-         *         {
-         *             name: '直接访问',
-         *             type: 'line',
-         *             stack: '总量',
-         *             data: [320, 332, 301, 334, 390, 330, 320]
-         *         },
-         *         {
-         *             name: '搜索引擎',
-         *             type: 'line',
-         *             stack: '总量',
-         *             data: [820, 932, 901, 934, 1290, 1330, 1320]
-         *         }
-         *     ]
-         * }
-         */
+        HashMap series = new HashMap();
+        series.put("data", yValue.toArray());
+        series.put("type", "line");
+        root.put("series", series);
         return root;
     }
 }

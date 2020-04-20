@@ -16,6 +16,8 @@ public interface CommodityDao {
 
     List<Commodity> selectCommodityList(@Param("commodity")Commodity commodity, @Param("page") Long page, @Param("limit") Long limit);
 
+    List<Commodity> selectByUserId(Long id);
+
     Long selectCommodityCount(Commodity commodity);
 
     int updateByPrimaryKeySelective(Commodity record);

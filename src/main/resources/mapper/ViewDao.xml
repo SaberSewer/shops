@@ -3,6 +3,24 @@
 <mapper namespace="com.hhxy.shops.dao.ViewDao">
 
     <select id="selectCartViewByUid" resultType="java.util.HashMap">
-            select * from CART_VIEW where uid = #{id}
+        select *
+        from CART_VIEW
+        where uid = #{id}
+    </select>
+    <select id="selectDisCountByUserIdList" resultType="java.util.HashMap">
+        select *
+        from DISCOUNT_VIEW
+        where uid = #{param1}
+        limit #{param2}, #{param3}
+    </select>
+    <select id="selectSelfCount" resultType="java.util.HashMap">
+        select SUM(prices) as prices, DATE_FORMAT( createTime, "%Y-%m-%d" ) as `time` from orders
+        <where>
+            <if test="userId != null">and id in (select oid from orders_sub where cid in (select id from commodity where
+                sid = (select id from store where userid = #{userId})))
+            </if>
+        </where>
+        group by DATE_FORMAT( createTime, "%Y-%m-%d" ) order by DATE_FORMAT( createTime, "%Y-%m-%d" ) desc
+        limit 0,7
     </select>
 </mapper>

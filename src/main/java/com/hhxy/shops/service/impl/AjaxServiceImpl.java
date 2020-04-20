@@ -9,6 +9,7 @@ import com.hhxy.shops.utils.PoJoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,6 +27,14 @@ public class AjaxServiceImpl implements AjaxService {
     private AddressDao addressDao;
     @Autowired
     private BannerDao bannerDao;
+    @Autowired
+    private PlacardDao placardDao;
+    @Autowired
+    private UserDao userDao;
+    @Autowired
+    private DiscountDao discountDao;
+    @Autowired
+    private ViewDao viewDao;
     @Autowired
     private PublicService publicService;
 
@@ -85,4 +94,50 @@ public class AjaxServiceImpl implements AjaxService {
         json.putAll(hash);
         return json;
     }
+
+    @Override
+    public JSONObject getPlacardList(Long page, Long limit) {
+        List list = placardDao.selectAllList( (page - 1) * limit, limit);
+        HashMap<String, Object> hash = PoJoUtil.getTableMap(list);
+        hash.put("count", placardDao.selectAllCount());
+        JSONObject json = new JSONObject();
+        json.putAll(hash);
+        return json;
+    }
+
+    @Override
+    public JSONObject getUserList(User user, Long page, Long limit) {
+        List list = userDao.selectUserList(user, (page - 1) * limit, limit);
+        HashMap<String, Object> hash = PoJoUtil.getTableMap(list);
+        hash.put("count", userDao.selectUserCount(user));
+        JSONObject json = new JSONObject();
+        json.putAll(hash);
+        return json;
+    }
+
+    @Override
+    public JSONObject getGroupList(Long id, Long page, Long limit) {
+        List list = viewDao.selectDisCountByUserIdList(id, (page - 1) * limit, limit);
+        HashMap<String, Object> hash = PoJoUtil.getTableMap(list);
+        hash.put("count", discountDao.selectDisCountByUserIdCount(id));
+        JSONObject json = new JSONObject();
+        json.putAll(hash);
+        return json;
+    }
+
+    @Override
+    public JSONObject getSelfCount(Long id) {
+        List<HashMap> list = viewDao.selectSelfCount(id);
+        List xValue = new ArrayList();
+        List yValue = new ArrayList();
+        list.forEach(hashMap -> {
+            xValue.add(hashMap.get("time"));
+            yValue.add(hashMap.get("prices"));
+        });
+        HashMap hash = PoJoUtil.getEcharMap(xValue, yValue);
+        JSONObject json = new JSONObject();
+        json.putAll(hash);
+        return json;
+    }
+
 }

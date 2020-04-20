@@ -39,10 +39,15 @@ public class PublicController {
     private ViewDao viewDao;
     @Autowired
     private BannerDao bannerDao;
+    @Autowired
+    private PlacardDao placardDao;
+    @Autowired
+    private DiscountDao discountDao;
     @RequestMapping(value = "/")
     public String index(Model model, HttpSession session) {
         model.addAttribute("categoryList", categoryDao.selectIndexList());
         model.addAttribute("bannerList", bannerDao.selectIndexBannerList());
+        model.addAttribute("placardList", placardDao.selectIndexList());
         return "index";
     }
 
@@ -108,6 +113,7 @@ public class PublicController {
         commodity.setStatus(1L);
         model.addAttribute("commodityList", commodityDao.selectCommodityList(commodity, 0L, 5L));
         model.addAttribute("repList", repDao.selectByCid(id));
+        model.addAttribute("discount", discountDao.selectDiscountByCid(id));
         return "item";
     }
 
@@ -121,18 +127,26 @@ public class PublicController {
         model.addAttribute("addressList", addressDao.getAllAddressByUserId(user.getId()));
         model.addAttribute("commodity", c);
         model.addAttribute("orders", ordersSub);
+        model.addAttribute("isDiscount", 1);
         return "order";
     }
 
     @RequestMapping(value = "/submitOrder")
-    public String Orders(OrdersSub ordersSub, String description, String name, String phone, Long aid, Model model, HttpSession session) {
+    public String Orders(OrdersSub ordersSub, String description, String name, String phone, Long aid, Model model, HttpSession session, Long isDiscount) {
         User user = (User) session.getAttribute("user");
         Orders orders = new Orders();
         Address address = addressDao.selectByPrimaryKey(aid);
         orders.setAddress(address.getName());
         orders.setPhone(address.getPhone());
-        orders.setStatus(3L);
-        orders.setPrices(ordersSub.getPrices().multiply(BigDecimal.valueOf(ordersSub.getNum())));
+        orders.setStatus(2L);
+        Discount discount = discountDao.selectDiscountByCid(ordersSub.getCid());
+        if(isDiscount == 2){
+            orders.setPrices(discount.getPrice().multiply(BigDecimal.valueOf(ordersSub.getNum())));
+            orders.setIsDiscount(2L);
+        }else {
+            orders.setPrices(ordersSub.getPrices().multiply(BigDecimal.valueOf(ordersSub.getNum())));
+            orders.setIsDiscount(2L);
+        }
         orders.setDescription(description);
         orders.setCreatetime(new Date());
         orders.setUid(user.getId());
@@ -142,6 +156,7 @@ public class PublicController {
         ordersSub.setOid(orders.getId());
         ordersSubDao.insertSelective(ordersSub);
         model.addAttribute("orders", orders);
+
         return "paysuccess";
     }
 
@@ -282,7 +297,7 @@ public class PublicController {
         Address address = addressDao.selectByPrimaryKey(aid);
         orders.setAddress(address.getName());
         orders.setPhone(address.getPhone());
-        orders.setStatus(3L);
+        orders.setStatus(2L);
         BigDecimal sum = new BigDecimal(0L);
         for (int i = 0; i<cid.length;i++){
         }
@@ -333,5 +348,29 @@ public class PublicController {
         model.addAttribute("version", System.getProperty("java.version"));
         model.addAttribute("os", System.getProperty("os.name"));
         return "welcome";
+    }
+
+    @RequestMapping(value = "placard")
+    public String welcome(Long id, Model model){
+        model.addAttribute("placard", placardDao.selectByPrimaryKey(id));
+        return "placard";
+    }
+
+    @RequestMapping(value = "groupBuy")
+    public String groupBuy(Long cid, Long num, Model model, HttpSession session){
+        User user = (User) session.getAttribute("user");
+        if (user == null || user.getLevel() != 2) {
+            return login(new User(), model, session);
+        }
+        Commodity c = commodityDao.selectByPrimaryKey(cid);
+        c.setPrice(discountDao.selectDiscountByCid(cid).getPrice());
+        model.addAttribute("addressList", addressDao.getAllAddressByUserId(user.getId()));
+        model.addAttribute("commodity", c);
+        OrdersSub ordersSub = new OrdersSub();
+        ordersSub.setNum(num);
+        ordersSub.setCid(cid);
+        model.addAttribute("orders", ordersSub);
+        model.addAttribute("isDiscount", 2);
+        return "order";
     }
 }

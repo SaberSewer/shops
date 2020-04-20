@@ -104,6 +104,9 @@
             </foreach>
             );
     </select>
+    <select id="selectByUserId" resultType="com.hhxy.shops.po.Commodity">
+        select * from commodity where sid = (select id from store where userid = #{id})
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete
         from commodity

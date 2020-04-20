@@ -35,6 +35,19 @@
         <ul id="nav">
             <li>
                 <a href="javascript:;">
+                    <i class="iconfont left-nav-li" lay-tips="优惠活动">&#xe6b8;</i>
+                    <cite>优惠活动</cite>
+                    <i class="iconfont nav_right">&#xe697;</i></a>
+                <ul class="sub-menu">
+                    <li>
+                        <a onclick="xadmin.add_tab('团购设置','/self/group')">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>团购设置</cite></a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
                     <i class="iconfont left-nav-li" lay-tips="店铺管理">&#xe6b8;</i>
                     <cite>店铺管理</cite>
                     <i class="iconfont nav_right">&#xe697;</i></a>
@@ -88,7 +101,7 @@
         </div>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
-                <iframe src='/welcome' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+                <iframe src='/self/welcome' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
             </div>
         </div>
         <div id="tab_show"></div>

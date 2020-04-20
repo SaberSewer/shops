@@ -55,6 +55,8 @@ public class Orders implements Serializable {
      */
     private String phone;
 
+    private Long isDiscount;
+
     /**
      * 子查询用
      */

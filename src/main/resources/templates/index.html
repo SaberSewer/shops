@@ -58,7 +58,7 @@
                     <li class="f-item">青橙超市</li>
                     <li class="f-item">全球购</li>
                     <li class="f-item">闪购</li>
-                    <li class="f-item">团购</li>
+                    <li class="f-item"><a href="/gList" target="_blank"> 团购</a></li>
                     <li class="f-item">有趣</li>
                     <li class="f-item">
                        秒杀
@@ -93,25 +93,12 @@
         <div class="yui3-u Right">
             <div class="news">
                 <h4>
-                    <em class="fl">青橙快报</em>
-                    <span class="fr tip">更多 ></span>
+                    <em class="fl">公告中心</em>
                 </h4>
                 <div class="clearix"></div>
                 <ul class="news-list unstyled">
-                    <li>
-                        <span class="bold">[特惠]</span>备战开学季 全民半价购数码
-                    </li>
-                    <li>
-                        <span class="bold">[公告]</span>备战开学季 全民半价购数码
-                    </li>
-                    <li>
-                        <span class="bold">[特惠]</span>备战开学季 全民半价购数码
-                    </li>
-                    <li>
-                        <span class="bold">[公告]</span>备战开学季 全民半价购数码
-                    </li>
-                    <li>
-                        <span class="bold">[特惠]</span>备战开学季 全民半价购数码
+                    <li th:each="placard : ${placardList}" >
+                        <a th:href="'/placard?id='+${placard.id}" th:text="${placard.title}"></a>
                     </li>
                 </ul>
             </div>

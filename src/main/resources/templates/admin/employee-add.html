@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Lowin</title>
+    <link rel="stylesheet" href="/css/auth.css">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <script src="/js/jquery-3.4.1.js"></script>
+    <script src="/lib/layui/layui.js"></script>
+</head>
+
+<body>
+<div class="lowin">
+    <div class="lowin-brand">
+        <img src="/images/kodinger.jpg" id="setImg" alt="logo">
+    </div>
+    <div class="lowin-wrapper">
+        <div class="lowin-box lowin-login">
+            <div class="lowin-box-inner">
+                <form name="frm" method="post" action="/admim/user/save">
+                    <input type="hidden" class="lowin-btn" name="img" id="img" value="/img/kodinger.jpg">
+                    <input type="hidden" name="id" value="">
+                    <p>添加新员工</p>
+                    <div class="lowin-group">
+                        <label>用户名(登陆用) <a href="#" class="login-back-link"></a></label>
+                        <input type="text"  value="" id="loginname" name="loginname" class="lowin-input" placeholder="请输入用户名">
+                    </div>
+                    <div class="lowin-group">
+                        <label>昵称 <a href="#" class="login-back-link"></a></label>
+                        <input type="text"  value="" id="username" name="username" class="lowin-input" placeholder="请输入昵称">
+                    </div>
+                    <div class="lowin-group">
+                        <label>电子邮箱 <a href="#" class="login-back-link"></a></label>
+                        <input type="email" id="email" name="email" class="lowin-input" placeholder="请输入电子邮箱"  />
+                    </div>
+                    <div class="lowin-group password-group">
+                        <label>密码</label>
+                        <input type="password" id="password" name="password" placeholder="请输入密码" class="lowin-input">
+                    </div>
+                    <div class="lowin-group password-group">
+                        <label>确认密码</label>
+                        <input type="password" id="repassword" name="repassword" placeholder="请输入密码" autocomplete="current-password"
+                               class="lowin-input">
+                    </div>
+                    <div class="lowin-group password-group">
+                        <label>身份</label>
+                        <input type="radio" value="1" name="level">管理员&nbsp;&nbsp;
+                    </div>
+                    <button class="lowin-btn login-btn" type="button" onclick="doSubmit()">
+                        保存
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function doSubmit() {
+        if($("#loginname").val() == "" || $("#loginname") == undefined){
+            alert("用户名不能为空")
+            $("#loginname").focus();
+            return;
+        }
+        if($("#username").val() == "" || $("#username") == undefined){
+            alert("昵称不能为空")
+            $("#username").focus();
+            return;
+        }
+        if($("#email").val() == "" || $("#email") == undefined){
+            var paten = / ^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+            if(!paten.test($("#email").val())) {
+                alert("邮箱格式不对")
+                $("#email").focus();
+                return
+            }
+            alert("电子邮箱不能为空")
+            $("#email").focus();
+            return;
+        }
+        if($("#password").val() == "" || $("#password") == undefined){
+            alert("密码不能为空")
+            $("#password").focus();
+            return;
+        }
+        if($("#repassword").val() == "" || $("#repassword") == undefined){
+            alert("确认密码不能为空")
+            $("#repassword").focus();
+            return;
+        }
+        if($("#password").val() != $("#repassword").val()) {
+            alert("两次输入的密码不一致")
+            return;
+        }
+        frm.submit()
+    }
+
+    layui.use('upload', function(){
+        var upload = layui.upload;
+
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#setImg' //绑定元素
+            ,url: '/upload/' //上传接口
+            ,done: function(res){
+                //上传完毕回调
+                if(res.error == 0){
+                    $("#setImg").attr("src", res.url)
+                    $("#img").val(res.url)
+                } else {
+                    alert(res.message)
+                }
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+    });
+</script>
+</body>
+</html>

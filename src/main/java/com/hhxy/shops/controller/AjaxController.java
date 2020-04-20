@@ -103,6 +103,15 @@ public class AjaxController {
                             orders.setUid(u.getId());
                             return ajaxService.getOrderList(orders, start, limit).toJSONString();
                         }
+                        case "selfList": {
+                            start = Long.parseLong(String.valueOf(map.get("page")));
+                            limit = Long.parseLong(String.valueOf(map.get("limit")));
+                            if (map != null) {
+                                orders = PoJoUtil.mapToPo(map, new Orders());
+                            }
+                            orders.setCid(u.getId());
+                            return ajaxService.getOrderList(orders, start, limit).toJSONString();
+                        }
                     }
                 }
                 case "store": {
@@ -146,6 +155,50 @@ public class AjaxController {
                             limit = Long.parseLong(String.valueOf(map.get("limit")));
                             return ajaxService.getBannerList(start, limit).toJSONString();
                         }
+                    }
+                }
+                case "placard":{
+                    switch (action){
+                        case "list":{
+                            start = Long.parseLong(String.valueOf(map.get("page")));
+                            limit = Long.parseLong(String.valueOf(map.get("limit")));
+                            return ajaxService.getPlacardList(start, limit).toJSONString();
+                        }
+                    }
+                }
+                case "employee":{
+                    switch (action){
+                        case "list":{
+                            start = Long.parseLong(String.valueOf(map.get("page")));
+                            limit = Long.parseLong(String.valueOf(map.get("limit")));
+                            u = PoJoUtil.mapToPo(map, new User());
+                            return ajaxService.getUserList(u, start, limit).toJSONString();
+                        }
+                        default:
+                            throw new Exception("页面跟着小姨子跑了");
+                    }
+                }
+                case "group":{
+                    switch (action){
+                        case "list":{
+                            start = Long.parseLong(String.valueOf(map.get("page")));
+                            limit = Long.parseLong(String.valueOf(map.get("limit")));
+                            return ajaxService.getGroupList(u.getId(),start, limit).toJSONString();
+                        }
+                        default:
+                            throw new Exception("页面跟着小姨子跑了");
+                    }
+                }
+                case "welcome":{
+                    switch (action){
+                        case "self":{
+                            return ajaxService.getSelfCount(null).toJSONString();
+                        }
+                        case "mySelf":{
+                            return  ajaxService.getSelfCount(u.getId()).toJSONString();
+                        }
+                        default:
+                            throw new Exception("页面跟着小姨子跑了");
                     }
                 }
                 default:

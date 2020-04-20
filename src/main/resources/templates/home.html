@@ -111,6 +111,7 @@
                                 <th lay-data="{templet:'#status'}">状态</th>
                                 <th lay-data="{field:'address'}">送货地址</th>
                                 <th lay-data="{field:'phone'}">手机号</th>
+                                <th lay-data="{templet:'#isDis'}">团购订单</th>
                                 <th lay-data="{templet:'#show'}">查看</th>
                             </tr>
                             </thead>
@@ -285,8 +286,19 @@
     {{# } }}
 </script>
 
+
+<script type="text/html" id="isDis">
+    {{# if(d.isDiscount == 1){}}
+    否
+    {{# } else if(d.isDiscount == 2){ }}
+    是
+    {{# } }}
+</script>
 <script type="text/html" id="show">
 	<input class="layui-btn layui-btn-danger" style="width: 70px" value="详情" onclick="window.open('/orders?id={{d.id}}')">
+    {{# if(d.status == 3){ }}
+    <input class="layui-btn layui-btn-danger "  style="width: 70px" value="退款" onclick="location.href='saveOrder?id={{d.id}}&status=5'">
+    {{#}}}
 	{{# if(d.status == 3){ }}
     <input class="layui-btn layui-btn-danger "  style="width: 70px" value="收货" onclick="location.href='saveOrder?id={{d.id}}&status=4'">
     {{# } }}

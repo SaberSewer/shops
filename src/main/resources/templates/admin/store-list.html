@@ -134,15 +134,15 @@
 <script type="text/html" id="show">
     {{# if(d.auditstatus == 1){}}
     <input class="layui-btn layui-btn-danger" type="button" value="拒绝"
-           onclick="location.href='/admin/store/save?id={{d.id}}&auditstatus=1'"/>
+           onclick="location.href='/admin/store/save?id={{d.id}}&auditstatus=2'"/>
     {{# } else if(d.auditstatus === 2) {}}
     <input class="layui-btn layui-btn-danger" type="button" value="通过"
-           onclick="location.href='/admin/store/save?id={{d.id}}&auditstatus=2'"/>
+           onclick="location.href='/admin/store/save?id={{d.id}}&auditstatus=1'"/>
     {{# } else {}}
     <input class="layui-btn layui-btn-danger" type="button" value="通过"
-           onclick="location.href='/admin/store/save?id={{d.id}}&auditstatus=2'"/>
-    <input class="layui-btn layui-btn-danger" type="button" value="拒绝"
            onclick="location.href='/admin/store/save?id={{d.id}}&auditstatus=1'"/>
+    <input class="layui-btn layui-btn-danger" type="button" value="拒绝"
+           onclick="location.href='/admin/store/save?id={{d.id}}&auditstatus=2'"/>
     {{#}}}
 </script>
 </body>

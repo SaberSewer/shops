@@ -219,6 +219,10 @@
                                         <button onclick="addCart()" target="_blank"
                                            class="sui-btn  btn-danger addshopcar">加入购物车</button>
                                     </li>
+                                    <li th:if="${discount != null}">
+                                        <button onclick="groupBuy()" target="_blank"
+                                                class="sui-btn  btn-danger addshopcar">参与拼团</button>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -489,6 +493,10 @@
     }
     function addCart() {
         frm.action = "/cart/save"
+    }
+
+    function groupBuy() {
+        frm.action = "/groupBuy"
     }
 </script>
 </html>
