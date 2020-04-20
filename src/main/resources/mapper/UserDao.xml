@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhxy.shops.dao.UserDao">
+    <resultMap id="BaseResultMap" type="com.hhxy.shops.po.User">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="loginname" jdbcType="VARCHAR" property="loginname"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="registeDate" jdbcType="TIMESTAMP" property="registedate"/>
+        <result column="level" jdbcType="BIGINT" property="level"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="status" jdbcType="BIGINT" property="status"/>
+        <result column="img" jdbcType="VARCHAR" property="img"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, username, loginname, `password`, registeDate, `level`, email, `status`, img
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectByloginNameOrEmail" resultMap="BaseResultMap">
+        select * from user
+        <where>
+            password = #{password} and status != 2 and `level` = #{level}
+            <choose>
+                <when test="loginname != null">
+                    and loginname = #{loginname}
+                </when>
+                <otherwise>
+                    and email = #{email}
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+    <select id="selectUserList" resultType="com.hhxy.shops.po.User" resultMap="BaseResultMap">
+        select * from user
+        <where>
+            <if test="user.username != null">
+                and username = #{user.username,jdbcType=VARCHAR}
+            </if>
+            <if test="user.loginname != null">
+                and loginname = #{user.loginname,jdbcType=VARCHAR}
+            </if>
+            <if test="user.password != null">
+                and `password` = #{user.password,jdbcType=VARCHAR}
+            </if>
+            <if test="user.registedate != null">
+                and register = #{user.registedate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="user.level != null">
+                and `level` = #{user.level,jdbcType=BIGINT}
+            </if>
+            <if test="user.email != null">
+                and email = #{user.email,jdbcType=VARCHAR}
+            </if>
+            <if test="user.status != null">
+                and `status` = #{user.status,jdbcType=BIGINT}
+            </if>
+        </where>
+        limit #{page},#{limit}
+    </select>
+    <select id="selectUserCount" resultType="java.lang.Long">
+        select count(*) from user
+        <where>
+            <if test="username != null">
+                and username = #{username,jdbcType=VARCHAR}
+            </if>
+            <if test="loginname != null">
+                and loginname = #{loginname,jdbcType=VARCHAR}
+            </if>
+            <if test="password != null">
+                and `password` = #{password,jdbcType=VARCHAR}
+            </if>
+            <if test="registedate != null">
+                and register = #{registedate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="level != null">
+                and `level` = #{level,jdbcType=BIGINT}
+            </if>
+            <if test="email != null">
+                and email = #{email,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null">
+                and `status` = #{status,jdbcType=BIGINT}
+            </if>
+        </where>
+    </select>
+    <select id="selectAllUserList" resultType="com.hhxy.shops.po.User" resultMap="BaseResultMap">
+        select * from user
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from user
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.hhxy.shops.po.User" useGeneratedKeys="true">
+        insert into user (username, loginname, `password`,
+                          registeDate, `level`, email,
+                          `status`, img)
+        values (#{username,jdbcType=VARCHAR}, #{loginname,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+                #{registedate,jdbcType=TIMESTAMP}, #{level,jdbcType=BIGINT}, #{email,jdbcType=VARCHAR},
+                #{status,jdbcType=BIGINT}, #{img,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hhxy.shops.po.User"
+            useGeneratedKeys="true">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null">
+                username,
+            </if>
+            <if test="loginname != null">
+                loginname,
+            </if>
+            <if test="password != null">
+                `password`,
+            </if>
+            <if test="registedate != null">
+                registeDate,
+            </if>
+            <if test="level != null">
+                `level`,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="status != null">
+                `status`,
+            </if>
+            <if test="img != null">
+                img,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="loginname != null">
+                #{loginname,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="registedate != null">
+                #{registedate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="level != null">
+                #{level,jdbcType=BIGINT},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=BIGINT},
+            </if>
+            <if test="img != null">
+                #{img,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.hhxy.shops.po.User">
+        update user
+        <set>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="loginname != null">
+                loginname = #{loginname,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                `password` = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="registedate != null">
+                registeDate = #{registedate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="level != null">
+                `level` = #{level,jdbcType=BIGINT},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=BIGINT},
+            </if>
+            <if test="img != null">
+                img = #{img,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hhxy.shops.po.User">
+        update user
+        set username    = #{username,jdbcType=VARCHAR},
+            loginname   = #{loginname,jdbcType=VARCHAR},
+            `password`  = #{password,jdbcType=VARCHAR},
+            registeDate = #{registedate,jdbcType=TIMESTAMP},
+            `level`     = #{level,jdbcType=BIGINT},
+            email       = #{email,jdbcType=VARCHAR},
+            `status`    = #{status,jdbcType=BIGINT},
+            img         = #{img,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

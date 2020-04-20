@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhxy.shops.dao.RepDao">
+    <resultMap id="BaseResultMap" type="com.hhxy.shops.po.Rep">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="uid" jdbcType="VARCHAR" property="uid"/>
+        <result column="cid" jdbcType="BIGINT" property="cid"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="level" jdbcType="BIGINT" property="level"/>
+        <result column="createTimme" jdbcType="TIMESTAMP" property="createtimme"/>
+    </resultMap>
+
+    <resultMap id="itemMap" type="com.hhxy.shops.po.Rep">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="uid" jdbcType="VARCHAR" property="uid"/>
+        <result column="cid" jdbcType="BIGINT" property="cid"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="level" jdbcType="BIGINT" property="level"/>
+        <result column="createTimme" jdbcType="TIMESTAMP" property="createtimme"/>
+        <result column="username" property="uname" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, `uid`, cid, content, `level`, createTimme
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from rep
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectByCid" resultType="com.hhxy.shops.po.Rep" resultMap="itemMap">
+        select rep.*, u.username
+        from rep
+                 left join user u on rep.uid = u.id
+        where rep.cid = #{cid}
+    </select>
+    <select id="selectByUid" resultType="com.hhxy.shops.po.Rep">
+        select *
+        from rep
+        where uid = #{uid}
+        limit #{page}, #{limit}
+    </select>
+    <select id="selectCount" resultType="java.lang.Long">
+        select COUNT(*)
+        from rep
+        where uid = #{uid}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from rep
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.hhxy.shops.po.Rep" useGeneratedKeys="true">
+        insert into rep (`uid`, cid, content,
+                         `level`, createTimme)
+        values (#{uid,jdbcType=VARCHAR}, #{cid,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR},
+                #{level,jdbcType=BIGINT}, #{createtimme,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hhxy.shops.po.Rep"
+            useGeneratedKeys="true">
+        insert into rep
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uid != null">
+                `uid`,
+            </if>
+            <if test="cid != null">
+                cid,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="level != null">
+                `level`,
+            </if>
+            <if test="createtimme != null">
+                createTimme,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uid != null">
+                #{uid,jdbcType=VARCHAR},
+            </if>
+            <if test="cid != null">
+                #{cid,jdbcType=BIGINT},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="level != null">
+                #{level,jdbcType=BIGINT},
+            </if>
+            <if test="createtimme != null">
+                #{createtimme,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.hhxy.shops.po.Rep">
+        update rep
+        <set>
+            <if test="uid != null">
+                `uid` = #{uid,jdbcType=VARCHAR},
+            </if>
+            <if test="cid != null">
+                cid = #{cid,jdbcType=BIGINT},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="level != null">
+                `level` = #{level,jdbcType=BIGINT},
+            </if>
+            <if test="createtimme != null">
+                createTimme = #{createtimme,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hhxy.shops.po.Rep">
+        update rep
+        set `uid`       = #{uid,jdbcType=VARCHAR},
+            cid         = #{cid,jdbcType=BIGINT},
+            content     = #{content,jdbcType=VARCHAR},
+            `level`     = #{level,jdbcType=BIGINT},
+            createTimme = #{createtimme,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

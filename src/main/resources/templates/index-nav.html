@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div class="nav-top" th:fragment="index-nav">
+    <div class="top">
+        <div class="py-container">
+            <div class="shortcut">
+                <ul class="fl">
+                    <li class="f-item">青橙欢迎您！</li>
+                    <li class="f-item" th:if="${session.user == null}">请<a href="/login">登录</a><span><a href="/toRegister">免费注册</a></span>
+                    <li class="f-item" th:if="${session.user != null}"><a href="/home" th:text="${session.user.username}"></a> </li>
+                </ul>
+                <div class="fr">
+                    <ul class="types">
+                        <li class="f-item"><span>我的订单</span></li>
+                        <li class="f-item"><span><a href="/cart/myCart" target="_blank">我的购物车</a></span></li>
+                        <li class="f-item"><span><a href="/home" target="_blank">我的青橙</a></span></li>
+                        <li class="f-item"><span><a href="/self/login" target="_blank">商家后台</a></span></li>
+                        <li class="f-item" th:if="${session.user != null}"><span><a href="/logOut" target="_blank">退出登录</a></span></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--头部-->
+    <div class="header">
+        <div class="py-container">
+            <div class="yui3-g Logo">
+                <div class="yui3-u Left logoArea">
+                    <a class="logo-bd" title="青橙" href="/"></a>
+                </div>
+                <div class="yui3-u Rit searchArea">
+                    <div class="search">
+                        <form action="/search" class="sui-form form-inline" method="get">
+                            <!--searchAutoComplete-->
+                            <div class="input-append">
+                                <input type="text" id="autocomplete" name="name" class="input-error input-xxlarge" />
+                                <button class="sui-btn btn-xlarge btn-danger" type="submit">搜索</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

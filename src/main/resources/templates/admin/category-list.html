@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" class="x-admin-sm">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" href="/css/font.css">
+    <link rel="stylesheet" href="/css/xadmin.css">
+    <link rel="stylesheet" type="text/css" href="/css/zTreeStyle/zTreeStyle.css">
+    <script src="/js/jquery-3.4.1.js"></script>
+    <script src="/js/jquery.ztree.all.min.js"></script>
+    <script src="/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/js/xadmin.js"></script>
+    <script src="/js/dateFormat.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script>
+        layui.use("jquery", function () {
+            window.jQuery = layui.jquery
+        })
+        $(function () {
+            var setting = {
+                async: {
+                    autoParam: ["pid"],
+                    enable: true,
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    dataType: "json",
+                    contentType: "application/json",
+                    type: "post",
+                    url: "/Ajax/category/list",
+                    dataFilter: function (treeId, parentNode, data) {
+                        if (!data.cateList) return null;
+                        return data.cateList;
+                    }
+
+                },
+                data: {
+                    simpleData: {
+                        enable: true,
+                        idKey: "id",
+                        pIdKey: "pid"
+                    }
+                },
+                callback: {
+                    onClick: function (event, treeId, treeNode, clickFlag) {
+                        $("#name").val(treeNode.name)
+                        $("#pid").val(treeNode.pid)
+                        $("#sort").val(treeNode.sort)
+                        $("#id").val(treeNode.id)
+                        if (treeNode.isLoad == undefined) {
+                            $.ajax({
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                url: "/Ajax/admin/category/list",//请求的action路径
+                                contentType: "application/json",
+                                data: JSON.stringify({"pid": treeNode.id}),
+                                type: "post",
+                                error: function () {//请求失败处理函数
+                                    alert('请求失败');
+                                },
+                                success: function (data) { //添加子节点到指定的父节点
+                                    if (data.cateList == undefined || data.cateList.length == 0) {
+                                        //末节点的数据为空   所以不再添加节点  这里可以根据业务需求自己写
+                                        //$("#treeFrame").attr("src",treeNode.url);
+                                    } else {
+                                        var treeObj = $.fn.zTree.getZTreeObj("tree");
+                                        //treeNode.halfCheck = false;
+                                        var parentZNode = treeObj.getNodeByParam("id", treeNode.id, null);//获取指定父节点
+                                        newNode = treeObj.addNodes(parentZNode, data.cateList, false);
+                                        treeNode.isLoad = true;
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+
+            };
+            $.ajax({
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                dataType: "json",
+                type: "post",
+                url: "/Ajax/admin/category/list",
+                success: function (res) {
+                    category = $.fn.zTree.init($("#tree"), setting, res.cateList);
+                }
+            })
+
+        });
+    </script>
+</head>
+
+<body>
+<div class="layui-fluid">
+    <div class="x-nav">
+            <span class="layui-breadcrumb">
+                <a href="">首页</a>
+                <a>商品管理</a>
+                <a>
+                    <cite>类目设置</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+           onclick="location.reload()" title="刷新">
+            <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+        </a>
+    </div>
+
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-collapse">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        <div class="layui-form">
+                            <div class="layui-inline">
+                                <div class="layui-input-inline" style="width: 100px;">
+                                    <input type="text" class="layui-input" id="input" value="">
+                                </div>
+                                <div class="layui-input-inline" style="width: 100px;">
+
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="layui-card-body">
+                        <div class="layui-row">
+                            <div class="layui-col-md3">
+                                <div class="layui-card-body">
+                                    <ul id="tree" class="ztree"></ul>
+                                </div>
+                            </div>
+                            <div class="layui-col-md9">
+                                <div class="layui-card-body layui-form">
+                                    <input type="hidden" id="pid" value="">
+                                    <input type="hidden" id="id" value="">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">类目名</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" value="" id="name" class="layui-text">
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">排序</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" value="" id="sort" class="layui-text">
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-input-block">
+                                            <input class="layui-btn layui-btn-primary" value="添加同级" type="button"
+                                                   onclick="addNodes()">
+                                            &nbsp;
+                                            <input class="layui-btn layui-btn-primary" value="添加子级" type="button"
+                                                   onclick="addNode()">
+                                            &nbsp;
+                                            <input class="layui-btn layui-btn-primary" value="保存" type="button"
+                                                   onclick="save()">
+                                            &nbsp;
+                                            <input class="layui-btn layui-btn-primary" value="删除" type="button"
+                                                   onclick="del()">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+
+    layui.use('form', function () {
+        var form = layui.form;
+    });
+
+    function addNode() {
+        var id = $("#id").val()
+        xadmin.open('添加子级', '/admin/category/add?pid=' + id, 800, 600, false)
+    }
+
+
+    function addNodes() {
+        var pid = $("#pid").val()
+        xadmin.open('添加同级', '/admin/category/add?pid=' + pid, 800, 600, false)
+    }
+
+    function save() {
+        var json = {}
+        json.name = $("#name").val()
+        json.pid = $("#pid").val()
+        json.sort = $("#sort").val()
+        json.id = $("#id").val()
+        $.ajax({
+            headers: {
+                "Content-Type": "application/json",
+            },
+            url: "/Ajax/admin/category/save",//请求的action路径
+            contentType: "application/json",
+            data: JSON.stringify(json),
+            type: "post",
+            error: function () {//请求失败处理函数
+                alert('请求失败');
+            },
+            success: function (data) {
+                if(data.error == undefined){
+                    var treeObj = $.fn.zTree.getZTreeObj("tree");
+                    json.isLoad = true;
+                    treeObj.updateNode(json);
+                    xadmin.close();
+                }
+            }
+        })
+    }
+
+    function del() {
+        var id = $("#id").val()
+        if (id == undefined) {
+            alert("请选择节点")
+        } else {
+            $.ajax({
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                url: "/Ajax/admin/category/del",//请求的action路径
+                contentType: "application/json",
+                data: JSON.stringify({"id": id}),
+                type: "post",
+                error: function () {//请求失败处理函数
+                    alert('请求失败');
+                },
+                success: function (data) { //添加子节点到指定的父节点
+                    alert(data.info);
+                    if (data.error == undefined) {
+                        var treeObj = $.fn.zTree.getZTreeObj("tree");
+                        var node = treeObj.getNodeByParam("id", id);
+                        treeObj.removeNode(node)
+                    }
+                }
+            });
+        }
+    }
+
+
+    function doSearch() {
+        var json = {}
+        json.name = $("#input").val()
+        table.reload("test", {
+            url: '/Ajax/admin/store/list',
+            method: 'post',
+            contentType: 'application/json',
+            where: json
+        })
+    }
+</script>
+
+<script type="text/html" id="time">
+    {{ FormatDate(d.register)}}
+</script>
+
+<script type="text/html" id="life">
+    {{ FormatDate(d.start)}} - {{ FormatDate(d.end)}}
+</script>
+
+<script type="text/html" id="type">
+    {{# if(d.type == 1){}}
+    个体
+    {{# } else if(d.type == 2){ }}
+    公司集团
+    {{# } }}
+</script>
+
+<script type="text/html" id="audit">
+    {{# if(d.auditstatus == 1){}}
+    未核审
+    {{# } else if(d.auditstatus == 2){ }}
+    通过
+    {{# } else if(d.auditstatus == 2){ }}
+    拒绝
+    {{# } }}
+</script>
+<script type="text/html" id="show">
+    {{# if(d.auditstatus == 1){}}
+    <input class="layui-btn layui-btn-danger" type="button" value="通过"
+           onclick="location.href='/admin/store/save?id=#{d.id}&auditstatus=2'"/>
+    <input class="layui-btn layui-btn-danger" type="button" value="拒绝"
+           onclick="location.href='/admin/store/save?id=#{d.id}&auditstatus=1'"/>
+    {{# } else if(d.auditstatus === 2) {}}
+    <input class="layui-btn layui-btn-danger" type="button" value="通过"
+           onclick="location.href='/admin/store/save?id=#{d.id}&auditstatus=2'"/>
+    {{# }}}
+
+</script>
+</body>
+</html>

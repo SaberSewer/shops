@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhxy.shops.dao.StoreDao">
+  <resultMap id="BaseResultMap" type="com.hhxy.shops.po.Store">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="userid" jdbcType="BIGINT" property="userid" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="type" jdbcType="BIGINT" property="type" />
+    <result column="carid" jdbcType="VARCHAR" property="carid" />
+    <result column="person" jdbcType="VARCHAR" property="person" />
+    <result column="start" jdbcType="DATE" property="start" />
+    <result column="end" jdbcType="DATE" property="end" />
+    <result column="register" jdbcType="TIMESTAMP" property="register" />
+    <result column="range" jdbcType="VARCHAR" property="range" />
+    <result column="auditstatus" jdbcType="BIGINT" property="auditstatus" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, userid, `name`, `type`, carid, person, `start`, `end`, register, `range`, auditstatus, 
+    address
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from store
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+    <select id="selectList" resultType="com.hhxy.shops.po.Store">
+      select * from store <where>
+      <if test="store.userid != null">
+        userid = #{store.userid}
+      </if>
+    </where>
+      limit #{page}, #{limit}
+    </select>
+  <select id="selectCount" resultType="java.lang.Long">
+    select count(*) from store <where>
+    <if test="userid != null">
+      userid = #{userid}
+    </if>
+  </where>
+  </select>
+    <select id="selectByUserId" resultType="com.hhxy.shops.po.Store">
+      select * from store where userid = #{id}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from store
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.hhxy.shops.po.Store" useGeneratedKeys="true">
+    insert into store (userid, `name`, `type`, 
+      carid, person, `start`, 
+      `end`, register, `range`, 
+      auditstatus, address)
+    values (#{userid,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=BIGINT}, 
+      #{carid,jdbcType=VARCHAR}, #{person,jdbcType=VARCHAR}, #{start,jdbcType=DATE}, 
+      #{end,jdbcType=DATE}, #{register,jdbcType=TIMESTAMP}, #{range,jdbcType=VARCHAR}, 
+      #{auditstatus,jdbcType=BIGINT}, #{address,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hhxy.shops.po.Store" useGeneratedKeys="true">
+    insert into store
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userid != null">
+        userid,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="type != null">
+        `type`,
+      </if>
+      <if test="carid != null">
+        carid,
+      </if>
+      <if test="person != null">
+        person,
+      </if>
+      <if test="start != null">
+        `start`,
+      </if>
+      <if test="end != null">
+        `end`,
+      </if>
+      <if test="register != null">
+        register,
+      </if>
+      <if test="range != null">
+        `range`,
+      </if>
+      <if test="auditstatus != null">
+        auditstatus,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userid != null">
+        #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=BIGINT},
+      </if>
+      <if test="carid != null">
+        #{carid,jdbcType=VARCHAR},
+      </if>
+      <if test="person != null">
+        #{person,jdbcType=VARCHAR},
+      </if>
+      <if test="start != null">
+        #{start,jdbcType=DATE},
+      </if>
+      <if test="end != null">
+        #{end,jdbcType=DATE},
+      </if>
+      <if test="register != null">
+        #{register,jdbcType=TIMESTAMP},
+      </if>
+      <if test="range != null">
+        #{range,jdbcType=VARCHAR},
+      </if>
+      <if test="auditstatus != null">
+        #{auditstatus,jdbcType=BIGINT},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hhxy.shops.po.Store">
+    update store
+    <set>
+      <if test="userid != null">
+        userid = #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        `type` = #{type,jdbcType=BIGINT},
+      </if>
+      <if test="carid != null">
+        carid = #{carid,jdbcType=VARCHAR},
+      </if>
+      <if test="person != null">
+        person = #{person,jdbcType=VARCHAR},
+      </if>
+      <if test="start != null">
+        `start` = #{start,jdbcType=DATE},
+      </if>
+      <if test="end != null">
+        `end` = #{end,jdbcType=DATE},
+      </if>
+      <if test="register != null">
+        register = #{register,jdbcType=TIMESTAMP},
+      </if>
+      <if test="range != null">
+        `range` = #{range,jdbcType=VARCHAR},
+      </if>
+      <if test="auditstatus != null">
+        auditstatus = #{auditstatus,jdbcType=BIGINT},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hhxy.shops.po.Store">
+    update store
+    set userid = #{userid,jdbcType=BIGINT},
+      `name` = #{name,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=BIGINT},
+      carid = #{carid,jdbcType=VARCHAR},
+      person = #{person,jdbcType=VARCHAR},
+      `start` = #{start,jdbcType=DATE},
+      `end` = #{end,jdbcType=DATE},
+      register = #{register,jdbcType=TIMESTAMP},
+      `range` = #{range,jdbcType=VARCHAR},
+      auditstatus = #{auditstatus,jdbcType=BIGINT},
+      address = #{address,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

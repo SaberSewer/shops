@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhxy.shops.dao.OrdersDao">
+    <resultMap id="BaseResultMap" type="com.hhxy.shops.po.Orders">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="uid" jdbcType="BIGINT" property="uid"/>
+        <result column="cid" jdbcType="BIGINT" property="cid"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="prices" jdbcType="DECIMAL" property="prices"/>
+        <result column="createTime" jdbcType="TIMESTAMP" property="createtime"/>
+        <result column="status" jdbcType="BIGINT" property="status"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <collection property="ordersSubList" column="id" javaType="java.util.ArrayList"
+                    ofType="com.hhxy.shops.po.OrdersSub"
+                    select="getChildren"></collection>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, `uid`, cid, address, prices, createTime, `status`, phone, name
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from orders
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="getChildren" parameterType="long" resultType="com.hhxy.shops.po.OrdersSub">
+        select *
+        from orders_sub
+        where oid = #{id}
+    </select>
+    <select id="selectOrdersList" resultType="com.hhxy.shops.po.Orders">
+        select * from orders
+        <where>
+            <if test="orders.uid != null">
+                uid = #{orders.uid}
+            </if>
+        </where>
+        limit #{page}, #{limit}
+    </select>
+  <select id="selectOrderCount" resultType="java.lang.Long">
+    select count(*) from orders <where>
+    <if test="uid != null">
+      uid = #{uid}
+    </if>
+  </where>
+  </select>
+    <select id="selectSelfOrdersList" resultType="com.hhxy.shops.po.Orders">
+        select * from orders where cid in (select id from commodity where sid = (select id from store where uid = #{uid}))
+    </select>
+    <select id="selectSelfOrderCount" resultType="java.lang.Long">
+        select COUNT(*) from orders where cid in (select id from commodity where sid = (select id from store where uid = #{uid}))
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from orders
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.hhxy.shops.po.Orders"
+            useGeneratedKeys="true">
+        insert into orders (`uid`, cid, address,
+                            prices, createTime, `status`)
+        values (#{uid,jdbcType=BIGINT}, #{cid,jdbcType=BIGINT}, #{address,jdbcType=VARCHAR},
+                #{prices,jdbcType=DECIMAL}, #{createtime,jdbcType=TIMESTAMP}, #{status,jdbcType=BIGINT})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hhxy.shops.po.Orders"
+            useGeneratedKeys="true">
+        insert into orders
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uid != null">
+                `uid`,
+            </if>
+            <if test="cid != null">
+                cid,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="prices != null">
+                prices,
+            </if>
+            <if test="createtime != null">
+                createTime,
+            </if>
+            <if test="status != null">
+                `status`,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="phone != null">
+                `phone`,
+            </if>
+            <if test="description != null">
+                `description`,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uid != null">
+                #{uid,jdbcType=BIGINT},
+            </if>
+            <if test="cid != null">
+                #{cid,jdbcType=BIGINT},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="prices != null">
+                #{prices,jdbcType=DECIMAL},
+            </if>
+            <if test="createtime != null">
+                #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.hhxy.shops.po.Orders">
+        update orders
+        <set>
+            <if test="uid != null">
+                `uid` = #{uid,jdbcType=BIGINT},
+            </if>
+            <if test="cid != null">
+                cid = #{cid,jdbcType=BIGINT},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="prices != null">
+                prices = #{prices,jdbcType=DECIMAL},
+            </if>
+            <if test="createtime != null">
+                createTime = #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=BIGINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hhxy.shops.po.Orders">
+        update orders
+        set `uid`      = #{uid,jdbcType=BIGINT},
+            cid        = #{cid,jdbcType=BIGINT},
+            address    = #{address,jdbcType=VARCHAR},
+            prices     = #{prices,jdbcType=DECIMAL},
+            createTime = #{createtime,jdbcType=TIMESTAMP},
+            `status`   = #{status,jdbcType=BIGINT}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

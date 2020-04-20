@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品类目设置</title>
+    <link rel="stylesheet" type="text/css" href="/css/zTreeStyle/zTreeStyle.css">
+    <script src="/js/jquery-1.4.4.min.js"></script>
+    <script src="/js/jquery.ztree.all.min.js"></script>
+    <script>
+
+
+        $(function () {
+            var setting = {
+                async: {
+                    autoParam: ["pid"],
+                    enable: true,
+                    dataType: "json",
+                    contentType: "application/json",
+                    type: "post",
+                    url: "/Ajax/category/list"
+                },
+                data: {
+                    simpleData: {
+                        enable: true,
+                        idKey: "id",
+                        pIdKey: "pid"
+                    }
+                },
+                callback: {
+                    onClick: function (event, treeId, treeNode, clickFlag) {
+                            $.ajax({
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                url: "/Ajax/admin/category/list",//请求的action路径
+                                contentType: "application/json",
+                                data: JSON.stringify({"pid": treeNode.id}),
+                                type:"post",
+                                error: function () {//请求失败处理函数
+                                    alert('请求失败');
+                                },
+                                success: function (data) { //添加子节点到指定的父节点
+                                    if (data.cateList == undefined || data.cateList.length == 0) {
+                                        //末节点的数据为空   所以不再添加节点  这里可以根据业务需求自己写
+                                        //$("#treeFrame").attr("src",treeNode.url);
+                                    } else {
+                                        var treeObj = $.fn.zTree.getZTreeObj("tree");
+                                        //treeNode.halfCheck = false;
+                                        var parentZNode = treeObj.getNodeByParam("id", treeNode.id, null);//获取指定父节点
+                                        newNode = treeObj.addNodes(parentZNode, data.cateList, false);
+                                    }
+                                }
+                            });
+
+                    }
+                }
+
+            };
+            $.ajax({
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                dataType: "json",
+                type: "post",
+                url: "/Ajax/admin/category/list",
+
+                success: function (res) {
+                    category = $.fn.zTree.init($("#tree"), setting, res.cateList);
+                }
+            })
+
+        });
+    </script>
+</head>
+<body>
+
+<div>
+
+    <div>
+        <ul id="tree" class="ztree"></ul>
+    </div>
+
+</div>
+</body>
+</html>

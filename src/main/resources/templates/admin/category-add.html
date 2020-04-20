@@ -1,0 +1,66 @@
+<html xmlns:th="http://www.thymeleaf.org" class="x-admin-sm">
+<head>
+    <script src="/js/jquery-3.4.1.js"></script>
+    <script src="/lib/layui/layui.js"></script>
+    <script src="/js/xadmin.js"></script>
+
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+
+</head>
+<body>
+<div class="row" style="width: 90%; margin-left: 5%">
+    <form method="post" class="layui-form">
+        <input type="hidden" id="pid" th:value="${category}">
+        <h3>添加新客户</h3>
+        <div class="form-group">
+            <label>类目名</label>
+            <input type="text" class="form-control" id="name" name="code" value="" placeholder="类目名">
+        </div>
+        <div class="form-group">
+            <label>排序</label>
+            <input type="text" class="form-control" id="sort" name="name" value="" placeholder="排序">
+        </div>
+        <input type="button" value="提交" class="btn btn-default" onclick="doSubmit()">
+    </form>
+</div>
+<script>
+    function doSubmit() {
+        var json = {}
+        json.pid = $("#pid").val()
+        json.name = $("#name").val()
+        json.sort = $("#sort").val()
+        $.ajax({
+            headers: {
+                "Content-Type": "application/json",
+            },
+            url: "/Ajax/admin/category/save",//请求的action路径
+            contentType: "application/json",
+            data: JSON.stringify(json),
+            type: "post",
+            error: function () {//请求失败处理函数
+                alert('请求失败');
+            },
+            success: function (data) {
+                var treeObj = parent.$.fn.zTree.getZTreeObj("tree");
+                //treeNode.halfCheck = false;
+                var parentZNode = treeObj.getNodeByParam("id", json.pid, null);//获取指定父节点
+                newNode = treeObj.addNodes(parentZNode, data.node, false);
+                xadmin.close();
+            }
+        })
+    }
+
+</script>
+</body>
+</html>

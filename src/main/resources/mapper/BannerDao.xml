@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhxy.shops.dao.BannerDao">
+    <resultMap id="BaseResultMap" type="com.hhxy.shops.po.Banner">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="dtstart" jdbcType="TIMESTAMP" property="dtstart"/>
+        <result column="dtend" jdbcType="TIMESTAMP" property="dtend"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, url, dtstart, dtend
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from banner
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectIndexBannerList" resultType="com.hhxy.shops.po.Banner">
+        select *
+        from banner
+        where now() >= dtstart
+          and dtend >= now()
+    </select>
+    <select id="selectAllBannerList" resultType="com.hhxy.shops.po.Banner">
+        select *
+        from banner
+        limit #{param1}, #{param2}
+    </select>
+    <select id="selectAllBannerCount" resultType="java.lang.Long">
+        select count(*) from banner
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from banner
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.hhxy.shops.po.Banner"
+            useGeneratedKeys="true">
+        insert into banner (url, dtstart, dtend)
+        values (#{url,jdbcType=VARCHAR}, #{dtstart,jdbcType=TIMESTAMP}, #{dtend,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hhxy.shops.po.Banner"
+            useGeneratedKeys="true">
+        insert into banner
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="url != null">
+                url,
+            </if>
+            <if test="dtstart != null">
+                dtstart,
+            </if>
+            <if test="dtend != null">
+                dtend,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="url != null">
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="dtstart != null">
+                #{dtstart,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dtend != null">
+                #{dtend,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.hhxy.shops.po.Banner">
+        update banner
+        <set>
+            <if test="url != null">
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="dtstart != null">
+                dtstart = #{dtstart,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dtend != null">
+                dtend = #{dtend,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hhxy.shops.po.Banner">
+        update banner
+        set url     = #{url,jdbcType=VARCHAR},
+            dtstart = #{dtstart,jdbcType=TIMESTAMP},
+            dtend   = #{dtend,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

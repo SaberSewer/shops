@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhxy.shops.dao.CommodityDao">
+    <resultMap id="BaseResultMap" type="com.hhxy.shops.po.Commodity">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="sid" jdbcType="VARCHAR" property="sid"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="registerdate" jdbcType="TIMESTAMP" property="registerdate"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="stock" jdbcType="BIGINT" property="stock"/>
+        <result column="status" jdbcType="BIGINT" property="status"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="isFree" jdbcType="VARCHAR" property="isfree"/>
+        <result column="cid" jdbcType="BIGINT" property="cid"/>
+        <result column="img" jdbcType="VARCHAR" property="img"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, sid, `name`, registerdate, description, stock, `status`, price, isFree, cid,
+    img
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from commodity
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectCommodityList" resultType="com.hhxy.shops.po.Commodity">
+        select * from commodity
+        <where>
+            <if test="commodity.sid != null">
+                and sid = #{commodity.sid,jdbcType=VARCHAR}
+            </if>
+            <if test="commodity.name != null and commodity.name != ''">
+                and `name` like '%${commodity.name}%'
+            </if>
+            <if test="commodity.registerdate != null">
+                and registerdate = #{commodity.registerdate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="commodity.description != null">
+                and description = #{commodity.description,jdbcType=VARCHAR}
+            </if>
+            <if test="commodity.stock != null">
+                and stock = #{commodity.stock,jdbcType=BIGINT}
+            </if>
+            <if test="commodity.status != null">
+                and `status` = #{commodity.status,jdbcType=BIGINT}
+            </if>
+            <if test="commodity.price != null">
+                and price = #{commodity.price,jdbcType=DECIMAL}
+            </if>
+            <if test="commodity.isfree != null">
+                and isFree = #{commodity.isfree,jdbcType=VARCHAR}
+            </if>
+            <if test="commodity.cid != null">
+                and cid = #{commodity.cid,jdbcType=BIGINT}
+            </if>
+            <if test="commodity.img != null">
+                and img = #{commodity.img,jdbcType=VARCHAR}
+            </if>
+        </where>
+        limit #{page}, #{limit}
+    </select>
+    <select id="selectCommodityCount" resultType="java.lang.Long">
+        select count(*) from commodity
+        <where>
+            <if test="sid != null">
+                and sid = #{sid,jdbcType=VARCHAR}
+            </if>
+            <if test="name != null">
+                and `name` like '%${name}%'
+            </if>
+            <if test="registerdate != null">
+                and registerdate = #{registerdate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="description != null">
+                and description = #{description,jdbcType=VARCHAR}
+            </if>
+            <if test="stock != null">
+                and stock = #{stock,jdbcType=BIGINT}
+            </if>
+            <if test="status != null">
+                and `status` = #{status,jdbcType=BIGINT}
+            </if>
+            <if test="price != null">
+                and price = #{price,jdbcType=DECIMAL}
+            </if>
+            <if test="isfree != null">
+                and isFree = #{isfree,jdbcType=VARCHAR}
+            </if>
+            <if test="cid != null">
+                and cid = #{cid,jdbcType=BIGINT}
+            </if>
+            <if test="img != null">
+                and img = #{img,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+    <select id="selectByCartId" resultType="com.hhxy.shops.po.Commodity">
+        select *
+        from commodity
+        where id in (select cid from cart where id in
+            <foreach collection="array" open="(" close=")" separator="," item="ids">
+                #{ids}
+            </foreach>
+            );
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from commodity
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.hhxy.shops.po.Commodity"
+            useGeneratedKeys="true">
+        insert into commodity (sid, `name`, registerdate,
+                               description, stock, `status`,
+                               price, isFree, cid,
+                               img)
+        values (#{sid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{registerdate,jdbcType=TIMESTAMP},
+                #{description,jdbcType=VARCHAR}, #{stock,jdbcType=BIGINT}, #{status,jdbcType=BIGINT},
+                #{price,jdbcType=DECIMAL}, #{isfree,jdbcType=VARCHAR}, #{cid,jdbcType=BIGINT},
+                #{img,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.hhxy.shops.po.Commodity"
+            useGeneratedKeys="true">
+        insert into commodity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sid != null">
+                sid,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="registerdate != null">
+                registerdate,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="stock != null">
+                stock,
+            </if>
+            <if test="status != null">
+                `status`,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="isfree != null">
+                isFree,
+            </if>
+            <if test="cid != null">
+                cid,
+            </if>
+            <if test="img != null">
+                img,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sid != null">
+                #{sid,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="registerdate != null">
+                #{registerdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="stock != null">
+                #{stock,jdbcType=BIGINT},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=BIGINT},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="isfree != null">
+                #{isfree,jdbcType=VARCHAR},
+            </if>
+            <if test="cid != null">
+                #{cid,jdbcType=BIGINT},
+            </if>
+            <if test="img != null">
+                #{img,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.hhxy.shops.po.Commodity">
+        update commodity
+        <set>
+            <if test="sid != null">
+                sid = #{sid,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="registerdate != null">
+                registerdate = #{registerdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="stock != null">
+                stock = #{stock,jdbcType=BIGINT},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=BIGINT},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="isfree != null">
+                isFree = #{isfree,jdbcType=VARCHAR},
+            </if>
+            <if test="cid != null">
+                cid = #{cid,jdbcType=BIGINT},
+            </if>
+            <if test="img != null">
+                img = #{img,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hhxy.shops.po.Commodity">
+        update commodity
+        set sid          = #{sid,jdbcType=VARCHAR},
+            `name`       = #{name,jdbcType=VARCHAR},
+            registerdate = #{registerdate,jdbcType=TIMESTAMP},
+            description  = #{description,jdbcType=VARCHAR},
+            stock        = #{stock,jdbcType=BIGINT},
+            `status`     = #{status,jdbcType=BIGINT},
+            price        = #{price,jdbcType=DECIMAL},
+            isFree       = #{isfree,jdbcType=VARCHAR},
+            cid          = #{cid,jdbcType=BIGINT},
+            img          = #{img,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>
