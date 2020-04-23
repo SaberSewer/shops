@@ -25,4 +25,6 @@ public interface AjaxService {
 
     JSONObject getSelfCount(Long id);
 
+    JSONObject getHotSelfCount(Long id);
+
 }

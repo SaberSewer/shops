@@ -197,6 +197,12 @@ public class AjaxController {
                         case "mySelf":{
                             return  ajaxService.getSelfCount(u.getId()).toJSONString();
                         }
+                        case "hotSelf":{
+                            return ajaxService.getHotSelfCount(null).toJSONString();
+                        }
+                        case "myHotSelf":{
+                            return ajaxService.getHotSelfCount(u.getId()).toJSONString();
+                        }
                         default:
                             throw new Exception("页面跟着小姨子跑了");
                     }

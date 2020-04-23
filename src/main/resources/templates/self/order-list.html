@@ -132,7 +132,7 @@
 <script type="text/html" id="show">
     <input class="layui-btn layui-btn-danger" style="width: 70px" value="详情" onclick="window.open('/orders?id={{d.id}}')">
     {{# if(d.status == 2){ }}
-    <input class="layui-btn layui-btn-danger "  style="width: 70px" value="发货" onclick="location.href='saveOrder?id={{d.id}}&status=3'">
+    <input class="layui-btn layui-btn-danger "  style="width: 70px" value="发货" onclick="location.href='admin/orders/save?id={{d.id}}&status=3'">
     {{# } }}
 </script>
 </body>

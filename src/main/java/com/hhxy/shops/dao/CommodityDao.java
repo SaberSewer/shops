@@ -25,4 +25,8 @@ public interface CommodityDao {
     int updateByPrimaryKey(Commodity record);
 
     List<Commodity> selectByCartId(Long[] id);
+
+    List<Commodity> selectCommodityIsGroupList(long page, Long pageSize);
+
+    Long selectCommodityIsGroupCount();
 }

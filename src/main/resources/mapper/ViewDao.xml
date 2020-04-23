@@ -20,7 +20,18 @@
                 sid = (select id from store where userid = #{userId})))
             </if>
         </where>
-        group by DATE_FORMAT( createTime, "%Y-%m-%d" ) order by DATE_FORMAT( createTime, "%Y-%m-%d" ) desc
+        group by DATE_FORMAT( createTime, "%Y-%m-%d" ) order by DATE_FORMAT( createTime, "%Y-%m-%d" ) asc
         limit 0,7
+    </select>
+    <select id="selectHotSelf" resultType="java.util.HashMap">
+        SELECT a1.num, c.name from (select cid, SUM(num) num from orders_sub
+        <where>
+            <if test="userId != null">
+                cid in (SELECT id from commodity WHERE sid in (SELECT id from store WHERE userid = #{userId}))
+            </if>
+        </where>
+        GROUP by cid) as a1 LEFT JOIN
+        commodity as c on a1.cid = c.id ORDER by num desc
+        limit 0, 5
     </select>
 </mapper>

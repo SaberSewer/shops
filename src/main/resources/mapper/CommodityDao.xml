@@ -107,6 +107,12 @@
     <select id="selectByUserId" resultType="com.hhxy.shops.po.Commodity">
         select * from commodity where sid = (select id from store where userid = #{id})
     </select>
+    <select id="selectCommodityIsGroupList" resultType="com.hhxy.shops.po.Commodity">
+        select * from commodity where id in (select cid from discount where now() between dtstart and dtend) limit #{param1}, #{param2}
+    </select>
+    <select id="selectCommodityIsGroupCount" resultType="java.lang.Long">
+        select COUNT(*) from commodity where id in (select cid from discount where now() between dtstart and dtend)
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete
         from commodity

@@ -125,4 +125,27 @@ public class PoJoUtil {
         root.put("series", series);
         return root;
     }
+
+    /**
+     * @param xValue 横轴做表明
+     * @param yValue  数据值
+     * @Param type 属性类型
+     * @return
+     */
+    public static HashMap getEcharMap(List xValue, List yValue, String type) {
+        //主Map
+        HashMap root = new HashMap();
+        HashMap xAxis = new HashMap();
+        xAxis.put("type", "category");
+        xAxis.put("data", xValue.toArray());
+        root.put("xAxis", xAxis);
+        HashMap yAxis = new HashMap();
+        yAxis.put("type", "value");
+        root.put("yAxis", yAxis);
+        HashMap series = new HashMap();
+        series.put("data", yValue.toArray());
+        series.put("type", type);
+        root.put("series", series);
+        return root;
+    }
 }

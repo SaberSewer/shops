@@ -134,7 +134,22 @@ public class AjaxServiceImpl implements AjaxService {
             xValue.add(hashMap.get("time"));
             yValue.add(hashMap.get("prices"));
         });
-        HashMap hash = PoJoUtil.getEcharMap(xValue, yValue);
+        HashMap hash = PoJoUtil.getEcharMap(xValue, yValue, "line");
+        JSONObject json = new JSONObject();
+        json.putAll(hash);
+        return json;
+    }
+
+    @Override
+    public JSONObject getHotSelfCount(Long id) {
+        List<HashMap> list = viewDao.selectHotSelf(id);
+        List xValue = new ArrayList();
+        List yValue = new ArrayList();
+        list.forEach(hashMap -> {
+            xValue.add(hashMap.get("name"));
+            yValue.add(hashMap.get("num"));
+        });
+        HashMap hash = PoJoUtil.getEcharMap(xValue, yValue, "bar");
         JSONObject json = new JSONObject();
         json.putAll(hash);
         return json;

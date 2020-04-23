@@ -373,4 +373,18 @@ public class PublicController {
         model.addAttribute("isDiscount", 2);
         return "order";
     }
+
+    @RequestMapping(value = "gBuyList")
+    public String gBuyList(Model model, HttpSession session, @RequestParam(required = false) Long page){
+        if (page == null) {
+            page = 1L;
+        }
+        List<Commodity> list = commodityDao.selectCommodityIsGroupList((page - 1) * SystemSetting.PAGE_SIZE, SystemSetting.PAGE_SIZE);
+        Long count = commodityDao.selectCommodityIsGroupCount();
+        Long size = count % SystemSetting.PAGE_SIZE == 0 ? count / SystemSetting.PAGE_SIZE : (count / SystemSetting.PAGE_SIZE + 1);
+        model.addAttribute("commodityList", list);
+        model.addAttribute("now", page);
+        model.addAttribute("size", size);
+        return "search";
+    }
 }

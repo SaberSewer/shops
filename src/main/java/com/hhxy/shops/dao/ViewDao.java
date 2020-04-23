@@ -10,4 +10,8 @@ public interface ViewDao {
 
     //销量
     List<HashMap> selectSelfCount(Long userId);
+
+    //热卖产品前五
+    List<HashMap> selectHotSelf(Long userId);
+
 }

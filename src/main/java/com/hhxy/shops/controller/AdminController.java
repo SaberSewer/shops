@@ -178,7 +178,7 @@ public class AdminController {
         }
     }
 
-    @RequestMapping(value = "/orders/save")
+    @RequestMapping(value = "orders/save")
     public String orders(Orders orders, Model model, HttpSession session){
         User user = (User) session.getAttribute("user");
         ordersDao.updateByPrimaryKeySelective(orders);
