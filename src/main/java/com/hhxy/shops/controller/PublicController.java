@@ -101,6 +101,7 @@ public class PublicController {
         model.addAttribute("commodityList", list);
         model.addAttribute("now", page);
         model.addAttribute("size", size);
+        model.addAttribute("key", commodity.getName());
         return "search";
     }
 
@@ -136,7 +137,7 @@ public class PublicController {
         User user = (User) session.getAttribute("user");
         Orders orders = new Orders();
         Address address = addressDao.selectByPrimaryKey(aid);
-        orders.setAddress(address.getName());
+        orders.setAddress(address.getAddress());
         orders.setPhone(address.getPhone());
         orders.setStatus(2L);
         Discount discount = discountDao.selectDiscountByCid(ordersSub.getCid());
@@ -145,7 +146,7 @@ public class PublicController {
             orders.setIsDiscount(2L);
         }else {
             orders.setPrices(ordersSub.getPrices().multiply(BigDecimal.valueOf(ordersSub.getNum())));
-            orders.setIsDiscount(2L);
+            orders.setIsDiscount(1L);
         }
         orders.setDescription(description);
         orders.setCreatetime(new Date());
@@ -204,7 +205,13 @@ public class PublicController {
     @RequestMapping(value = "orders")
     public String order(Orders orders, Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
-        model.addAttribute("order", ordersDao.selectByPrimaryKey(orders.getId()));
+        Orders order = ordersDao.selectByPrimaryKey(orders.getId());
+        order.getOrdersSubList().forEach(ordersSub -> {
+            Commodity commodity = commodityDao.selectByPrimaryKey(ordersSub.getCid());
+            ordersSub.setName(commodity.getName());
+            ordersSub.setImg(commodity.getImg());
+        });
+        model.addAttribute("order", order);
         return "order-info";
     }
 

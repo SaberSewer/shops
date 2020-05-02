@@ -53,6 +53,30 @@ public class AjaxController {
                             }
                             return ajaxService.getCategoryList(category).toJSONString();
                         }
+                        case "save": {
+                            category = PoJoUtil.mapToPo(map, new Category());
+                            if (category.getId() == null) {
+                                categoryDao.insertSelective(category);
+                            } else {
+                                categoryDao.updateByPrimaryKeySelective(category);
+                            }
+                            json = new JSONObject();
+                            json.put("node", category);
+                            return json.toJSONString();
+                        }
+                        case "del": {
+                            category = PoJoUtil.mapToPo(map, new Category());
+                            category.setPid(category.getId());
+                            if (categoryDao.selectAllList(category).size() > 0) {
+                                throw new Exception("该节点有子节点，请先删除对应子节点");
+                            }
+                            categoryDao.deleteByPrimaryKey(category.getId());
+                            json = new JSONObject();
+                            json.put("info", "删除成功");
+                            return json.toJSONString();
+                        }
+                        default:
+                            throw new Exception("非法请求");
                     }
                 }
                 case "commodity": {
@@ -81,7 +105,8 @@ public class AjaxController {
                             limit = Long.parseLong(String.valueOf(map.get("limit")));
                             return ajaxService.getAddressList(u.getId(), start, limit).toJSONString();
                         }
-                        default: throw new Exception("非法请求");
+                        default:
+                            throw new Exception("非法请求");
                     }
                 }
                 case "orders": {
@@ -124,51 +149,31 @@ public class AjaxController {
                             }
                             return ajaxService.getStoreList(store, (start - 1) * limit, limit).toJSONString();
                         }
-                        case "save": {
-                            category = PoJoUtil.mapToPo(map, new Category());
-                            if (category.getId() == null) {
-                                categoryDao.insertSelective(category);
-                            } else {
-                                categoryDao.updateByPrimaryKeySelective(category);
-                            }
-                            json = new JSONObject();
-                            json.put("node", category);
-                            return json.toJSONString();
-                        }
-                        case "del": {
-                            category = PoJoUtil.mapToPo(map, new Category());
-                            category.setPid(category.getId());
-                            if (categoryDao.selectAllList(category).size() > 0) {
-                                throw new Exception("该节点有子节点，请先删除对应子节点");
-                            }
-                            categoryDao.deleteByPrimaryKey(category.getId());
-                            json = new JSONObject();
-                            json.put("info", "删除成功");
-                            return json.toJSONString();
-                        }
+                        default:
+                            throw new Exception("非法请求");
                     }
                 }
-                case "banner":{
-                    switch (action){
-                        case "list":{
+                case "banner": {
+                    switch (action) {
+                        case "list": {
                             start = Long.parseLong(String.valueOf(map.get("page")));
                             limit = Long.parseLong(String.valueOf(map.get("limit")));
                             return ajaxService.getBannerList(start, limit).toJSONString();
                         }
                     }
                 }
-                case "placard":{
-                    switch (action){
-                        case "list":{
+                case "placard": {
+                    switch (action) {
+                        case "list": {
                             start = Long.parseLong(String.valueOf(map.get("page")));
                             limit = Long.parseLong(String.valueOf(map.get("limit")));
                             return ajaxService.getPlacardList(start, limit).toJSONString();
                         }
                     }
                 }
-                case "employee":{
-                    switch (action){
-                        case "list":{
+                case "employee": {
+                    switch (action) {
+                        case "list": {
                             start = Long.parseLong(String.valueOf(map.get("page")));
                             limit = Long.parseLong(String.valueOf(map.get("limit")));
                             u = PoJoUtil.mapToPo(map, new User());
@@ -178,29 +183,29 @@ public class AjaxController {
                             throw new Exception("页面跟着小姨子跑了");
                     }
                 }
-                case "group":{
-                    switch (action){
-                        case "list":{
+                case "group": {
+                    switch (action) {
+                        case "list": {
                             start = Long.parseLong(String.valueOf(map.get("page")));
                             limit = Long.parseLong(String.valueOf(map.get("limit")));
-                            return ajaxService.getGroupList(u.getId(),start, limit).toJSONString();
+                            return ajaxService.getGroupList(u.getId(), start, limit).toJSONString();
                         }
                         default:
                             throw new Exception("页面跟着小姨子跑了");
                     }
                 }
-                case "welcome":{
-                    switch (action){
-                        case "self":{
+                case "welcome": {
+                    switch (action) {
+                        case "self": {
                             return ajaxService.getSelfCount(null).toJSONString();
                         }
-                        case "mySelf":{
-                            return  ajaxService.getSelfCount(u.getId()).toJSONString();
+                        case "mySelf": {
+                            return ajaxService.getSelfCount(u.getId()).toJSONString();
                         }
-                        case "hotSelf":{
+                        case "hotSelf": {
                             return ajaxService.getHotSelfCount(null).toJSONString();
                         }
-                        case "myHotSelf":{
+                        case "myHotSelf": {
                             return ajaxService.getHotSelfCount(u.getId()).toJSONString();
                         }
                         default:

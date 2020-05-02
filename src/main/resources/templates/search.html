@@ -39,7 +39,7 @@
                     <li class="f-item">闪购</li>
                     <li class="f-item">团购</li>
                     <li class="f-item">有趣</li>
-                    <li class="f-item"><a href="seckill-index.html" target="_blank">秒杀</a></li>
+                    <li class="f-item">秒杀</li>
                 </ul>
             </div>
             <div class="yui3-u Right"></div>
@@ -87,14 +87,10 @@
                 <div class="sui-pagination pagination-large">
                     <ul>
                         <li th:class="${now == 1? 'prev disabled':'prev' }">
-                            <a th:href="'/search?name=&page='+${now - 1}">«上一页</a>
+                            <a th:href="'/search?name='+${key}+'&page='+${now - 1}">«上一页</a>
                         </li>
-                        <li th:each="i:${#numbers.sequence((now - 2 <= 0 ? now: (now - 2)),size)}">
-                            <a class="active" th:href="'/search?name=&page='+${i}" th:text="${i}"></a>
-                        </li>
-
                         <li th:class="${now == size? 'next disabled':'next' }">
-                            <a th:href="'/search?name=&page='+${now + 1}">下一页»</a>
+                            <a th:href="'/search?name='+${key}+'&page='+${now + 1}">下一页»</a>
                         </li>
                     </ul>
                     <div><span>共<span th:text="${size}"></span>页&nbsp;</span><span>

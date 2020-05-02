@@ -33,5 +33,9 @@ public class OrdersSub implements Serializable {
      */
     private Long num;
 
+    private String name;
+
+    private String img;
+
     private static final long serialVersionUID = 1L;
 }

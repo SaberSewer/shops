@@ -73,10 +73,10 @@
 									<span>商品清单：</span>
 									<ul class="yui3-g" th:each="orderSub:${order.ordersSubList}">
 										<li class="yui3-u-1-6">
-											<span><img th:src="${session.user.img}" /></span>
+											<span><img th:src="${orderSub.img}" /></span>
 										</li>
 										<li class="yui3-u-7-12">
-											<div class="desc" ><span >商品名</span></div>
+											<div class="desc" ><span th:text="${orderSub.name}"></span></div>
 											<div class="seven">7天无理由退货</div>
 										</li>
 										<li class="yui3-u-1-12">
