@@ -62,7 +62,7 @@
                     </div>
                     <div class="order-detail">
                         <form action="/rep/save" class="layui-form">
-                            <input name="cid" type="hidden" th:value="${commodity.id}">
+                            <input name="cids" type="hidden" th:each="cid : ${commodity}" th:value="${cid}">
                             <div class="layui-form-item">
                                 <label class="layui-form-label">评价</label>
                                 <div class="layui-input-block">

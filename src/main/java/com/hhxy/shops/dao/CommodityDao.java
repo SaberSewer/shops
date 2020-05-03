@@ -29,4 +29,6 @@ public interface CommodityDao {
     List<Commodity> selectCommodityIsGroupList(long page, Long pageSize);
 
     Long selectCommodityIsGroupCount();
+
+    List<Long> selectByOid(Long cid);
 }

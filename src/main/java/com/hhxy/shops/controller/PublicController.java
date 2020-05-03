@@ -216,7 +216,7 @@ public class PublicController {
     }
 
     @RequestMapping(value = "rep/{action}")
-    public String rep(Rep rep, @PathVariable("action") String action, Model model, HttpSession session) {
+    public String rep(Rep rep, @PathVariable("action") String action, Model model, HttpSession session, @RequestParam(required = false) Long[] cids) {
         User user = (User) session.getAttribute("user");
         switch (action) {
             case "save": {
@@ -225,12 +225,16 @@ public class PublicController {
                     repDao.updateByPrimaryKeySelective(rep);
                 } else {
                     rep.setUid(user.getId());
-                    repDao.insertSelective(rep);
+                    for (Long cid : cids) {
+                        rep.setCid(cid);
+                        repDao.insertSelective(rep);
+                    }
+
                 }
                 return "home";
             }
             case "toAdd": {
-                model.addAttribute("commodity", commodityDao.selectByPrimaryKey(rep.getCid()));
+                model.addAttribute("commodity", commodityDao.selectByOid(rep.getCid()));
                 return "order-rep";
             }
             default:
